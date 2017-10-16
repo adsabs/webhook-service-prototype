@@ -1,8 +1,8 @@
-# Webhook test
+# Webhook prototype
 ## Introduction
 This repo represents a skeleton webhook implementation. It is modeled after a Flask-based microservice. Different usage modes correspond with different endpoint/views. The idea is to subscribe to particular events by providing a definition of the event you receive data for and the URL on which you want to receive that data. This data (JSON) will be submitted through a POST request by the webhook service to the specified URL.
 
-## implementation details
+## Implementation details
 For testing purposes, you can run the service by setting up a virtual environment (we used Python 2.7 in our development), installing all the modules in requirements.txt and then run
 ```
 python wsgi.py
@@ -43,15 +43,15 @@ where `WEBHOOK_TRIGGER_TOKEN` is the one specified in the application configurat
 Currently the only database backend is a SQLite database.
 
 ## Endpoints
-# Accounts endpoint: /account
+### Accounts endpoint: /account
 
 The data submitted to the `account` endpoint is stored in the `Accounts` table in the database. Currently, a user identifier (a string, like e.g. the user name), an email account (where a user wants to receive notifications) and the access token, generated for the user, will be stored in this table. In the prototype webhook service, only POST requests are accepted on this endpoint, for the creation of user accounts.
 
-# Subscription endpoint: /subscribe
+### Subscription endpoint: /subscribe
 
 The `subscribe` endpoint, accepts POST data that will be used to define subscriptions for a particular user to specific events; one subscription for per event type. If a user wants one particular event type to be sent to multiple callback URLs, they will have to submit as many subscriptions. The data will be stored in the `Subscriptions` table. Besides the data submitted by the user, this table has two additional columns: the column `failure_count` that tallies the number of failed attempts when posting event data to the callback URL defined for this subscription and the column `is_active` which will be set to `False` when the failure count exceeds the maximum allowable count. A `failed attempt` is defined as a POST request to the callback URL that returns an HTTP status code other than `200`. Lastly, the `Subscriptions` table contains a user identifier column which is a foreign key to the corresponding column in the `Accounts` table.
 
-# Event trigger endpoint: /trigger
+### Event trigger endpoint: /trigger
 
 When a service submits event data to the `trigger` endpoint (with the correct token), an entry in the `Events` table is created, before data is sent out to the appropriate callback URLs. A entry in the `Events` column consists of a string containing the `event type` (like "relation_added"), a time of the event (in UTC), the serialized JSON of the event and the md5sum of payload contents. The md5sum entry will be used to check whether an event was already submitted. If the webhook service is not required to make any decision on whether or not to send out data to callback URLs, this functionality is not necessary. Especially, if events are to be kept from "day 1", this is not a desirable feature, since the re-emission of events must be supported; after a relation is deleted, it may get added again if its deletion turned out to be incorrect. From a implementation and scalability point of view, storing events in a database table may not be the best solution, even if the underlying database is capable of dealing with large amounts of data. Since filtering of events may be a desirable requirement, a solution like `Redis` may be more appropriate.
 
