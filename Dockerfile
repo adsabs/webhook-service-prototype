@@ -33,7 +33,7 @@ WORKDIR /app
 RUN /bin/bash -c "git clone `cat /repository` /app"
 #RUN git pull && git reset --hard `cat /release`
 
-ADD service/local_config.py /app/local_config.py
+ADD webhook/local_config.py /app/local_config.py
 RUN /bin/bash -c "find . -maxdepth 2 -name config.py -exec /bin/bash -c 'echo {} | sed s/config.py/local_config.py/ | xargs -n1 cp /app/local_config.py' \;"
 
 # Provision the project
