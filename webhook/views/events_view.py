@@ -29,9 +29,9 @@ class Triggering(Resource):
         # The token supplied was correct: accept the event
         # Do some basic checking regarding acceptability
         try:
-            event = request.json['event']
+            event = request.json['event_type']
         except:
-            return {'error': 'no event was provided'}, 500
+            return {'error': 'no event type was provided'}, 500
         try:
             event_payload = request.json['payload']
         except:
@@ -79,7 +79,7 @@ class Triggering(Resource):
                 data["creator"] = "ADS"
                 data["source"] = "ADS.Discovery"
                 data["time"] = str(event_time.strftime('%s'))
-                data["event"] = event
+                data["event_type"] = event
                 data["payload"] = event_payload
                 headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
                 success = True

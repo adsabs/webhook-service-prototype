@@ -19,7 +19,7 @@ MAX_SEND_ATTEMPTS = 5
 # to define the structure only once. Alternative: define it in a module/class?
 DEFAULT_EVENT_DATA = {
     "id":"will hold user id",
-    "event": "will hold event string",
+    "event_type": "will hold event string",
     "creator": "ADS",
     "source": "ADS.Discovery",
     "description": "ADS events",
@@ -41,7 +41,7 @@ LOG_PATH = '{home}/logs/'.format(home=LOG_PATH)
 # and create the directory if it isn't there
 if not os.path.isdir(LOG_PATH):
     os.mkdir(LOG_PATH)
-# 
+#
 WEBHOOKS_LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,

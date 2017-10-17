@@ -19,7 +19,7 @@ class Subscription(Resource):
         $ curl -X POST \
           > -H "Authorization: Bearer <your access token>" \
           > -H "Content-Type: application/json" \
-          > -d '{"event": "relation_added", "url": "<your callback URL>"}' \
+          > -d '{"event_type": "relation_added", "url": "<your callback URL>"}' \
           > http://<some url here>/subscription
         """
         if 'Bearer' not in request.headers['Authorization']:
@@ -36,7 +36,7 @@ class Subscription(Resource):
         # The token supplied was correct: accept the subscription
         try:
             url = request.json['url']
-            event = request.json['event']
+            event = request.json['event_type']
         except:
             return {'error': 'incorrect submission data was provided'}, 401
         # Check if we already have this subscription
